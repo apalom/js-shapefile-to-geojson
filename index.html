@@ -29,22 +29,28 @@
             };
 
 
-            var starttime = +new Date,
+            let starttime = +new Date,
                 map = new OpenLayers.Map("map",{allOverlays: true}),
                 parser = new OpenLayers.Format.GeoJSON(),
                 vector = new OpenLayers.Layer.Vector("Converted"),
 
                 shapefile = new Shapefile({
-                    shp: "testdata/world.shp",
-                    dbf: "testdata/world.dbf"
-                }, function(data){
-                    var features = parser.read(data.geojson);
+                    shp: "testdata/Basin.NA.ibtracs_all_lines.v03r10.shp",
+                    dbf: "testdata/Basin.NA.ibtracs_all_lines.v03r10.dbf"
+                },
+
+                function(d) {
+
+                    let features = parser.read(d.geojson);
                     vector.addFeatures(features);
                     map.zoomToExtent(vector.getDataExtent());
 
-                    console.log("took",new Date - starttime,"milliseconds")
-                    console.log(data);
-                })
+                    //d.filter(d => d.geojson.features.properties.year > 1944);
+                    console.log("took", new Date - starttime, "milliseconds")
+                    console.log('data', d)
+                    console.log('data[0] year', d.geojson.features[0].properties.year);
+                });
+
 
             map.addLayer(vector);
         </script>
